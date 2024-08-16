@@ -13,8 +13,77 @@ body {
     width: 90%;
     max-width: 1200px;
     margin: auto;
-    overflow: hidden;
     padding: 0 20px;
+    overflow: hidden;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+label {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: none;
+    background-color: #2a2a4a;
+    color: #fff;
+    font-size: 1rem;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #a0a0a0;
+}
+
+input:focus,
+textarea:focus {
+    outline: 2px solid #f8a5c2;
+}
+
+/* Button Styles */
+.btn-primary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #e91e63;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+}
+
+.btn-primary:hover {
+    background-color: #d81b60;
+}
+
+.btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 10px #e91e63;
+}
+
+.btn-primary:disabled {
+    background-color: #b0b0b0;
+    cursor: not-allowed;
+}
+
+.form-group {
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 /* Header Styles */
@@ -22,12 +91,12 @@ header {
     background: #16213e;
     color: #f8a5c2;
     padding: 20px 0;
-    border-bottom: #e94560 3px solid;
+    border-bottom: 3px solid #e94560;
+    text-align: center;
 }
 
 header h1 {
     margin: 0;
-    text-align: center;
     font-size: 2rem;
 }
 
@@ -48,13 +117,19 @@ nav a {
     color: #f8a5c2;
     text-decoration: none;
     font-size: 1.1rem;
-    transition: color 0.3s ease;
     padding: 5px 10px;
+    transition: color 0.3s ease;
 }
 
-nav a:hover, nav a:focus {
+nav a:hover,
+nav a:focus {
     color: #e94560;
     outline: 2px solid #e94560;
+}
+
+.navbar-logo {
+    width: 100px;
+    height: 100px;
 }
 
 /* Main Content Styles */
@@ -85,7 +160,8 @@ main {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.book-item:hover, .book-item:focus-within {
+.book-item:hover,
+.book-item:focus-within {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(248,165,194,0.2);
 }
@@ -111,7 +187,6 @@ main {
 }
 
 #add-book-form button {
-    display: block;
     width: 100%;
     padding: 12px;
     background: #533483;
@@ -123,7 +198,8 @@ main {
     font-size: 1rem;
 }
 
-#add-book-form button:hover, #add-book-form button:focus {
+#add-book-form button:hover,
+#add-book-form button:focus {
     background: #e94560;
     outline: 2px solid #f8a5c2;
 }
@@ -178,10 +254,22 @@ footer {
 }
 
 /* Additional Styles for Better Readability and Accessibility */
-h2, h3, h4, h5, h6 {
+h2,
+h3,
+h4,
+h5,
+h6 {
     color: #f8a5c2;
     margin-top: 1.5em;
     margin-bottom: 0.5em;
+}
+
+a:focus,
+button:focus,
+input:focus,
+textarea:focus {
+    outline: 2px solid #f8a5c2;
+    outline-offset: 2px;
 }
 
 input::placeholder,
@@ -219,15 +307,6 @@ textarea::placeholder {
     background: #000;
     color: #fff;
     border: 1px solid #fff;
-}
-
-/* Focus Styles for Accessibility */
-a:focus,
-button:focus,
-input:focus,
-textarea:focus {
-    outline: 2px solid #f8a5c2;
-    outline-offset: 2px;
 }
 
 /* Skip to Content Link */
