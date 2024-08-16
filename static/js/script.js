@@ -1,22 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const bookGrid = document.getElementById('book-grid');
-    if (bookGrid) {
-        fetchBooks();
-    } else {
-        console.log('No book-grid element found on this page. Skipping fetchBooks.');
-    }
-
-    const addBookForm = document.getElementById('add-book-form');
-    if (addBookForm) {
-        addBookForm.addEventListener('submit', addBook);
-    }
-
-    const searchInput = document.getElementById('search-input');
-    const searchButton = document.getElementById('search-button');
-    if (searchInput && searchButton) {
-        searchInput.addEventListener('input', debounce(handleSearch, 300));
-        searchButton.addEventListener('click', handleSearch);
-    }
+    fetchBooks();
+    document.getElementById('add-book-form').addEventListener('submit', addBook);
+    document.getElementById('search-input').addEventListener('input', debounce(handleSearch, 300));
+    document.getElementById('search-button').addEventListener('click', handleSearch);
 });
 
 function fetchBooks(searchQuery = '') {
@@ -28,16 +14,11 @@ function fetchBooks(searchQuery = '') {
         .then(response => response.json())
         .then(books => {
             const bookGrid = document.getElementById('book-grid');
-            if (bookGrid) {
-                bookGrid.innerHTML = '';
-                books.forEach(book => {
-                    const bookElement = createBookElement(book);
-                    bookGrid.appendChild(bookElement);
-                });
-            } else {
-                console.log(document.body.innerHTML);
-                console.error('Error: book-grid element not found');
-            }
+            bookGrid.innerHTML = '';
+            books.forEach(book => {
+                const bookElement = createBookElement(book);
+                bookGrid.appendChild(bookElement);
+            });
         })
         .catch(error => console.error('Error:', error));
 }
