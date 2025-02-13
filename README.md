@@ -1,7 +1,5 @@
 <img src="books.png" alt="Decorative Books" width="200"/>
 
-Live Webpage: https://raimonvibe.pythonanywhere.com/
-
 # fullstack-books
 
 ## Overview
