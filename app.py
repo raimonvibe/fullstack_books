@@ -8,6 +8,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 import logging
 import os
+from spam_filter import contains_spam, get_spam_message
 
 # Configure logging
 log_dir = 'logs'
@@ -100,6 +101,13 @@ def api_books():
             app.logger.info("Received POST request to /api/books")
             book_data = request.json
             app.logger.debug(f"Book data received: {book_data}")
+            
+            fields_to_check = ['title', 'author', 'description']
+            for field in fields_to_check:
+                if field in book_data and contains_spam(str(book_data[field])):
+                    app.logger.warning(f"Spam detected in {field}: {book_data[field]}")
+                    return jsonify({"error": get_spam_message()}), 400
+            
             new_book = Book(**book_data)
             db.session.add(new_book)
             db.session.commit()
@@ -109,6 +117,11 @@ def api_books():
             app.logger.info("Received GET request to /api/books")
             search_query = request.args.get('search', '')
             app.logger.debug(f"Search query: {search_query}")
+            
+            if contains_spam(search_query):
+                app.logger.warning(f"Spam detected in search query: {search_query}")
+                return jsonify({"error": get_spam_message()}), 400
+            
             books = Book.query.filter(Book.title.ilike(f'%{search_query}%')).all()
             app.logger.info(f"Found {len(books)} books matching the query")
             return jsonify([{
@@ -177,6 +190,26 @@ def add_edit_book(book_id=None):
                 flash('Title and author are required fields.', 'error')
                 return render_template('add_edit_book.html', book=book)
 
+            if contains_spam(title):
+                app.logger.warning(f"Spam detected in title: {title}")
+                flash(get_spam_message(), 'error')
+                return render_template('add_edit_book.html', book=book)
+            
+            if contains_spam(author):
+                app.logger.warning(f"Spam detected in author: {author}")
+                flash(get_spam_message(), 'error')
+                return render_template('add_edit_book.html', book=book)
+            
+            if description and contains_spam(description):
+                app.logger.warning(f"Spam detected in description: {description}")
+                flash(get_spam_message(), 'error')
+                return render_template('add_edit_book.html', book=book)
+            
+            if isbn and contains_spam(isbn):
+                app.logger.warning(f"Spam detected in ISBN: {isbn}")
+                flash(get_spam_message(), 'error')
+                return render_template('add_edit_book.html', book=book)
+
             if book:
                 app.logger.info(f"Updating existing book with id: {book.id}")
                 book.title = title
@@ -225,6 +258,11 @@ def add_edit_book(book_id=None):
 @app.route('/search')
 def search():
     query = request.args.get('q', '')
+    
+    if contains_spam(query):
+        app.logger.warning(f"Spam detected in search query: {query}")
+        return jsonify({"error": get_spam_message()}), 400
+    
     books = Book.query.filter(
         or_(
             Book.title.ilike(f'%{query}%'),
@@ -258,6 +296,11 @@ def add_review(book_id):
         if not comment:
             app.logger.warning("Empty comment received")
             flash('Please provide a comment for your review.', 'error')
+            return redirect(url_for('book_details', id=book_id))
+
+        if contains_spam(comment):
+            app.logger.warning(f"Spam detected in review comment: {comment}")
+            flash(get_spam_message(), 'error')
             return redirect(url_for('book_details', id=book_id))
 
         new_review = Review(
@@ -319,6 +362,12 @@ def register():
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
+        
+        if contains_spam(username):
+            app.logger.warning(f"Spam detected in username: {username}")
+            flash(get_spam_message(), 'error')
+            return render_template('register.html')
+        
         if User.query.filter_by(username=username).first():
             flash('Username already exists.', 'error')
         elif User.query.filter_by(email=email).first():
